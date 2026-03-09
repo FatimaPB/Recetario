@@ -1,0 +1,239 @@
+<!-- TOASTS -->
+<div class="fixed top-6 right-6 z-[9999] space-y-3">
+
+  <div *ngFor="let toast of toasts" class="min-w-[280px] max-w-sm px-5 py-4 rounded-2xl shadow-2xl
+            text-white text-sm font-medium
+            animate-[fadeIn_0.3s_ease-out]" [ngClass]="{
+       'bg-emerald-600': toast.tipo === 'success',
+       'bg-red-600': toast.tipo === 'error',
+       'bg-amber-500 text-black': toast.tipo === 'warning',
+       'bg-blue-600': toast.tipo === 'info'
+     }">
+
+    <div class="flex items-center gap-3">
+
+      <!-- ICONO -->
+      <div [ngClass]="{
+            'text-emerald-300': toast.tipo === 'success',
+            'text-red-300': toast.tipo === 'error',
+            'text-yellow-300': toast.tipo === 'warning',
+            'text-blue-300': toast.tipo === 'info'
+          }">
+
+        <i *ngIf="toast.tipo === 'success'" class="fa-solid fa-circle-check"></i>
+        <i *ngIf="toast.tipo === 'error'" class="fa-solid fa-circle-xmark"></i>
+        <i *ngIf="toast.tipo === 'warning'" class="fa-solid fa-triangle-exclamation"></i>
+        <i *ngIf="toast.tipo === 'info'" class="fa-solid fa-circle-info"></i>
+
+      </div>
+
+      <!-- MENSAJE -->
+      <div class="flex-1">
+        {{ toast.mensaje }}
+      </div>
+
+      <!-- BOTÓN CERRAR -->
+      <button (click)="cerrarToast(toast.id)" class="text-white/70 hover:text-white transition">
+        ✕
+      </button>
+
+    </div>
+
+    <!-- BARRA DE PROGRESO -->
+    <div class="mt-3 h-1 rounded-full overflow-hidden bg-white/20">
+      <div class="h-full bg-white w-full animate-progress"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- HEADER -->
+<div class="flex justify-between items-center mb-6">
+
+  <div>
+    <h1 class="text-2xl font-semibold text-gray-800">Usuarios</h1>
+    <p class="text-sm text-gray-500">
+      Administración de accesos al sistema.
+    </p>
+  </div>
+
+  <div class="flex gap-3">
+
+    <!-- BOTÓN AGREGAR -->
+    <button (click)="abrirDrawer()"
+      class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition text-sm font-medium">
+      <i class="fa-solid fa-plus"></i>
+      Agregar Usuario
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- CARD -->
+<div class="bg-white rounded-xl shadow-md w-full">
+
+  <!-- TABLA -->
+  <div class="overflow-x-auto">
+
+    <table class="w-full text-sm">
+
+      <thead>
+        <tr class="text-left text-xs text-gray-500 uppercase tracking-wide border-b">
+          <th class="px-6 py-4">Nombre</th>
+          <th class="px-6 py-4">Correo</th>
+          <th class="px-6 py-4">Rol</th>
+          <th class="px-6 py-4">Estado</th>
+          <th class="px-6 py-4 text-center">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngIf="usuarios.length === 0">
+          <td colspan="5" class="text-center py-6 text-gray-400">
+            No hay usuarios registrados.
+          </td>
+        </tr>
+
+        <tr *ngFor="let u of usuarios" class="border-t hover:bg-gray-50 transition">
+
+          <!-- NOMBRE -->
+          <td class="px-6 py-4 font-medium text-gray-800">
+            {{ u.nombre }}
+          </td>
+
+          <!-- EMAIL -->
+          <td class="px-6 py-4 text-gray-600">
+            {{ u.email }}
+          </td>
+
+          <!-- ROL -->
+          <td class="px-6 py-4">
+            <span class="text-xs px-2.5 py-1 rounded-lg" [ngClass]="u.rol === 'superadmin' 
+                ? 'bg-purple-100 text-purple-700' 
+                : 'bg-blue-100 text-blue-700'">
+              {{ u.rol }}
+            </span>
+          </td>
+
+          <!-- ESTADO -->
+          <td class="px-6 py-4">
+            <span class="text-xs px-2.5 py-1 rounded-lg" [ngClass]="u.estado === 'activo' 
+                ? 'bg-green-100 text-green-700' 
+                : 'bg-red-100 text-red-700'">
+              {{ u.estado }}
+            </span>
+          </td>
+
+          <!-- ACCIONES -->
+          <td class="px-6 py-4 text-center">
+            <div class="flex justify-center gap-4">
+
+              <button (click)="cambiarEstado(u)" class="flex items-center gap-1 text-sm font-medium transition"
+                [ngClass]="u.estado === 'activo'
+    ? 'text-red-600 hover:text-red-800'
+    : 'text-green-600 hover:text-green-800'">
+
+                <i class="fa-solid" [ngClass]="u.estado === 'activo'
+       ? 'fa-user-slash'
+       : 'fa-user-check'">
+                </i>
+
+                {{ u.estado === 'activo' ? 'Desactivar' : 'Activar' }}
+              </button>
+
+            </div>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+<!-- OVERLAY + DRAWER -->
+<div *ngIf="mostrarDrawer" class="fixed inset-0 z-50">
+
+  <!-- FONDO DIFUMINADO -->
+  <div class="absolute inset-0 bg-black/30 backdrop-blur-sm overlay-fade" (click)="cerrarDrawer()">
+  </div>
+
+  <!-- DRAWER -->
+  <div class="absolute top-0 right-0 h-full w-[420px] bg-white shadow-2xl
+              animate-slide-in">
+
+    <div class="h-full flex flex-col p-8">
+      <!-- HEADER DRAWER -->
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-xl font-semibold text-gray-800">
+          Nuevo Usuario
+        </h2>
+
+        <button (click)="cerrarDrawer()" class="text-gray-400 hover:text-gray-700 text-xl">
+          ✕
+        </button>
+      </div>
+
+      <form (ngSubmit)="crearUsuario()" class="flex flex-col flex-1">
+
+        <!-- Nombre -->
+        <div class="mb-6">
+          <label class="block text-sm text-gray-600 mb-2">
+            Nombre
+          </label>
+          <input type="text" [(ngModel)]="nombre" name="nombre" required
+            class="w-full px-4 py-3 border rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none">
+        </div>
+
+        <!-- Email -->
+        <div class="mb-6">
+          <label class="block text-sm text-gray-600 mb-2">
+            Correo
+          </label>
+          <input type="email" [(ngModel)]="email" name="email" required
+            class="w-full px-4 py-3 border rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none">
+        </div>
+
+        <!-- Password -->
+        <div class="mb-6">
+          <label class="block text-sm text-gray-600 mb-2">
+            Contraseña
+          </label>
+          <input type="password" [(ngModel)]="password" name="password" required
+            class="w-full px-4 py-3 border rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none">
+        </div>
+
+        <!-- Rol -->
+        <div class="mb-8">
+          <label class="block text-sm text-gray-600 mb-2">
+            Rol
+          </label>
+
+          <select [(ngModel)]="rol" name="rol"
+            class="w-full px-4 py-3 border rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none">
+
+            <option value="administrador">Administrador</option>
+            <option value="superadmin">Superadmin</option>
+
+          </select>
+        </div>
+
+        <!-- BOTÓN -->
+        <button type="submit"
+          class="mt-auto bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl shadow-lg hover:shadow-xl transition text-sm font-medium">
+          Guardar Usuario
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>

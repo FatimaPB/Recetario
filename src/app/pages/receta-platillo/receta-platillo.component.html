@@ -1,0 +1,258 @@
+<!-- HEADER -->
+<div class="flex justify-between items-center mb-6">
+
+  <div>
+    <h1 class="text-xl font-semibold text-gray-800 uppercase">
+      {{ nombrePlatillo }}
+    </h1>
+    <p class="text-xs text-gray-500">
+      Gestión de receta y cálculo automático de precio.
+    </p>
+  </div>
+
+  <button routerLink="/platillos" class="flex items-center gap-2 text-xs text-gray-600 hover:text-gray-900 transition">
+    <i class="fa-solid fa-arrow-left"></i>
+    Regresar
+  </button>
+
+</div>
+
+<!-- ========================= -->
+<!-- AGREGAR ELEMENTO -->
+<!-- ========================= -->
+
+<div class="bg-white rounded-xl shadow-md p-5 mb-6">
+
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800">
+      Agregar Elemento
+    </h2>
+
+    <div class="flex bg-gray-100 rounded-lg p-1">
+
+      <button type="button" (click)="tipoSeleccionado='ingrediente'" [ngClass]="{
+                'bg-emerald-600 text-white': tipoSeleccionado==='ingrediente'
+              }" class="px-3 py-1 text-xs rounded-md font-medium transition">
+        Ingrediente
+      </button>
+
+      <button type="button" (click)="tipoSeleccionado='platillo'" [ngClass]="{
+                'bg-indigo-600 text-white': tipoSeleccionado==='platillo'
+              }" class="px-3 py-1 text-xs rounded-md font-medium transition">
+        Platillo
+      </button>
+
+    </div>
+  </div>
+
+  <!-- FORM INGREDIENTE -->
+  <form *ngIf="tipoSeleccionado==='ingrediente'" (ngSubmit)="agregar()"
+    class="grid grid-cols-4 gap-4 items-end text-sm">
+
+    <div class="col-span-2">
+      <label class="block text-xs text-gray-600 mb-1">Ingrediente</label>
+      <select [(ngModel)]="receta.id_ingrediente" name="id_ingrediente"
+        class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-emerald-500 outline-none">
+        <option [ngValue]="0">Seleccionar...</option>
+        <option *ngFor="let i of ingredientes" [ngValue]="i.id_ingrediente">
+          {{ i.nombre }}
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-xs text-gray-600 mb-1">Cantidad</label>
+      <input type="number" step="0.0001" [(ngModel)]="receta.cantidad" name="cantidad"
+        class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-emerald-500 outline-none">
+    </div>
+
+    <div>
+      <label class="block text-xs text-gray-600 mb-1">Unidad</label>
+      <select [(ngModel)]="receta.id_unidad" name="id_unidad"
+        class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-emerald-500 outline-none">
+        <option [ngValue]="0">Seleccionar...</option>
+        <option *ngFor="let u of unidades" [ngValue]="u.id_unidad">
+          {{ u.nombre }}
+        </option>
+      </select>
+    </div>
+
+    <div class="col-span-4 flex justify-end">
+      <button type="submit"
+        class="flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg text-xs font-semibold transition">
+        <i class="fa-solid fa-plus mr-2"></i>
+        Agregar
+      </button>
+    </div>
+
+  </form>
+
+  <!-- FORM PLATILLO -->
+  <form *ngIf="tipoSeleccionado==='platillo'" (ngSubmit)="agregarComponente()"
+    class="grid grid-cols-3 gap-4 items-end text-sm">
+
+    <div class="col-span-2">
+      <label class="block text-xs text-gray-600 mb-1">Platillo</label>
+      <select [(ngModel)]="componente.id_platillo_hijo" name="id_platillo_hijo"
+        class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-indigo-500 outline-none">
+        <option [ngValue]="0">Seleccionar...</option>
+        <option *ngFor="let p of platillos" [ngValue]="p.id_platillo">
+          {{ p.nombre }} — ${{ p.precio_venta | number:'1.2-2' }}
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-xs text-gray-600 mb-1">Cantidad</label>
+      <input type="number" min="1" [(ngModel)]="componente.cantidad" name="cantidad_componente"
+        class="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-indigo-500 outline-none">
+    </div>
+
+    <div class="col-span-3 flex justify-end">
+      <button type="submit"
+        class="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg text-xs font-semibold transition">
+        <i class="fa-solid fa-plus mr-2"></i>
+        Agregar
+      </button>
+    </div>
+
+  </form>
+
+</div>
+
+<!-- ========================= -->
+<!-- TABLA -->
+<!-- ========================= -->
+
+
+
+<div class="bg-white rounded-xl shadow-md p-5 mb-6">
+
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800">
+      Elementos
+    </h2>
+
+    <div class="text-right">
+      <p class="text-xs text-gray-500">Costo Total</p>
+      <p class="text-lg font-bold text-gray-800">
+        $ {{ costoActual | number:'1.2-2' }}
+      </p>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto border rounded-lg">
+
+    <table class="w-full text-xs">
+
+      <thead class="bg-gray-100 uppercase text-gray-600">
+        <tr>
+          <th class="px-3 py-2 text-left">Nombre</th>
+          <th class="px-3 py-2 text-center">Tipo</th>
+          <th class="px-3 py-2 text-center">Unitario</th>
+          <th class="px-3 py-2 text-center">Cant.</th>
+          <th class="px-3 py-2 text-center">Unidad</th>
+          <th class="px-3 py-2 text-center">Subtotal</th>
+          <th class="px-3 py-2 text-center">Acción</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let item of itemsUnificados" [ngClass]="{
+              'bg-emerald-50': item.tipo==='ingrediente',
+              'bg-indigo-50': item.tipo==='platillo'
+            }" class="hover:bg-gray-50">
+
+          <td class="px-3 py-2 font-medium">
+            {{ item.nombre }}
+          </td>
+
+          <td class="px-3 py-2 text-center">
+            <span *ngIf="item.tipo==='ingrediente'"
+              class="flex items-center justify-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-200 text-emerald-800">
+              <i class="fa-solid fa-leaf text-[9px]"></i>
+              ING
+            </span>
+
+            <span *ngIf="item.tipo==='platillo'"
+              class="flex items-center justify-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-200 text-indigo-800">
+              <i class="fa-solid fa-utensils text-[9px]"></i>
+              PLT
+            </span>
+          </td>
+
+          <td class="px-3 py-2 text-center">
+            $ {{ item.costo_unitario | number:'1.2-2' }}
+          </td>
+
+          <td class="px-3 py-2 text-center">
+            {{ item.cantidad }}
+          </td>
+
+          <td class="px-3 py-2 text-center">
+            {{ item.unidad }}
+          </td>
+
+          <td class="px-3 py-2 text-center font-semibold">
+            $ {{ item.costo_total | number:'1.2-2' }}
+          </td>
+
+          <td class="px-3 py-2 text-center">
+            <button *ngIf="item.tipo==='ingrediente'" (click)="eliminar(item.id)"
+              class="text-red-600 hover:text-red-800 transition text-sm">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+
+            <button *ngIf="item.tipo==='platillo'" (click)="eliminarComponente(item.id)"
+              class="text-red-600 hover:text-red-800 transition text-sm">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- FINANCIERO -->
+<!-- ========================= -->
+
+<div class="bg-white rounded-xl shadow-md p-5">
+
+  <h2 class="text-lg font-semibold text-gray-800 mb-4">
+    Información Financiera
+  </h2>
+
+  <div class="grid grid-cols-3 gap-6 text-sm">
+
+    <div>
+      <p class="text-xs text-gray-500">Costo</p>
+      <p class="font-semibold text-gray-800">
+        ${{ costoActual | number:'1.2-2' }}
+      </p>
+    </div>
+
+    <div>
+      <p class="text-xs text-gray-500">Precio</p>
+      <p class="font-bold text-emerald-600">
+        ${{ precioActual | number:'1.2-2' }}
+      </p>
+    </div>
+
+    <div>
+      <p class="text-xs text-gray-500">Margen</p>
+      <p class="font-bold text-indigo-600">
+        {{ margenPorcentaje | number:'1.0-2' }} %
+      </p>
+    </div>
+
+  </div>
+
+</div>

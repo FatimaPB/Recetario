@@ -1,0 +1,162 @@
+<div class="h-screen flex bg-gray-100 overflow-hidden">
+
+  <!-- OVERLAY MOBILE -->
+  <div *ngIf="mobileOpen" (click)="mobileOpen = false" class="fixed inset-0 bg-black/30 z-30 lg:hidden">
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="fixed lg:relative z-40 h-full bg-white border-r border-gray-200
+           transition-all duration-300 ease-in-out flex flex-col" [ngClass]="{
+           'w-64 translate-x-0': !collapsed,
+           'w-20 translate-x-0': collapsed,
+           '-translate-x-full lg:translate-x-0': !mobileOpen
+         }">
+
+    <!-- HEADER SIDEBAR -->
+    <div class="h-24 flex items-center justify-center border-b border-gray-200 bg-white relative">
+
+      <!-- LOGO -->
+      <div class="flex items-center justify-center w-full">
+        <img src="/logoposada.png" alt="Posada de Tampico Hotel" class="object-contain transition-all duration-300"
+          [ngClass]="collapsed ? 'h-14' : 'h-20'" />
+      </div>
+
+      <!-- TOGGLE DESKTOP -->
+      <button (click)="toggleSidebar()" class="hidden lg:flex absolute right-3 top-3 items-center justify-center
+                     h-8 w-8 rounded-md hover:bg-orange-50 transition">
+
+        <i class="fa-solid fa-angle-right h-4 w-4 text-gray-700 transition-transform duration-300"
+          [ngClass]="collapsed ? 'rotate-180' : ''"></i>
+      </button>
+
+    </div>
+
+    <!-- NAV -->
+    <nav class="flex-1 px-3 py-6 space-y-2">
+
+      <!-- ITEM TEMPLATE STYLE -->
+      <!-- Activo naranja institucional -->
+
+      <!-- DASHBOARD -->
+      <a routerLink="/dashboard" routerLinkActive="bg-orange-50 text-orange-600 border-l-4 border-orange-500" class="flex items-center gap-3 px-3 py-2 rounded-lg
+                text-gray-700 hover:bg-orange-50 hover:text-orange-600
+                transition text-sm border-l-4 border-transparent" [ngClass]="collapsed ? 'justify-center' : ''">
+
+        <i class="fa-solid fa-chart-line h-5 w-5 shrink-0"></i>
+
+        <span *ngIf="!collapsed">Dashboard</span>
+      </a>
+
+
+      <!-- INGREDIENTES -->
+      <a routerLink="/ingredientes" routerLinkActive="bg-orange-50 text-orange-600 border-l-4 border-orange-500" class="flex items-center gap-3 px-3 py-2 rounded-lg
+                text-gray-700 hover:bg-orange-50 hover:text-orange-600
+                transition text-sm border-l-4 border-transparent" [ngClass]="collapsed ? 'justify-center' : ''">
+
+        <i class="fa-solid fa-carrot h-5 w-5 shrink-0"></i>
+
+        <span *ngIf="!collapsed">Ingredientes</span>
+      </a>
+
+
+      <!-- PLATILLOS -->
+      <a routerLink="/platillos" routerLinkActive="bg-orange-50 text-orange-600 border-l-4 border-orange-500" class="flex items-center gap-3 px-3 py-2 rounded-lg
+                text-gray-700 hover:bg-orange-50 hover:text-orange-600
+                transition text-sm border-l-4 border-transparent" [ngClass]="collapsed ? 'justify-center' : ''">
+
+        <i class="fa-solid fa-utensils h-5 w-5 shrink-0"></i>
+
+        <span *ngIf="!collapsed">Platillos</span>
+      </a>
+
+
+      <!-- CATEGORÍAS -->
+      <a routerLink="/categorias-globales" routerLinkActive="bg-orange-50 text-orange-600 border-l-4 border-orange-500"
+        class="flex items-center gap-3 px-3 py-2 rounded-lg
+                text-gray-700 hover:bg-orange-50 hover:text-orange-600
+                transition text-sm border-l-4 border-transparent" [ngClass]="collapsed ? 'justify-center' : ''">
+
+        <i class="fa-solid fa-folder h-5 w-5 shrink-0"></i>
+
+        <span *ngIf="!collapsed">Categorías Globales</span>
+      </a>
+
+
+      <!-- SUBCATEGORÍAS -->
+      <a routerLink="/subcategorias" routerLinkActive="bg-orange-50 text-orange-600 border-l-4 border-orange-500" class="flex items-center gap-3 px-3 py-2 rounded-lg
+                text-gray-700 hover:bg-orange-50 hover:text-orange-600
+                transition text-sm border-l-4 border-transparent" [ngClass]="collapsed ? 'justify-center' : ''">
+
+        <i class="fa-solid fa-layer-group h-5 w-5 shrink-0"></i>
+
+        <span *ngIf="!collapsed">Subcategorías</span>
+      </a>
+
+
+      <!-- CONFIGURACIÓN -->
+      <a routerLink="/configuracion-precios"
+        routerLinkActive="bg-orange-50 text-orange-600 border-l-4 border-orange-500" class="flex items-center gap-3 px-3 py-2 rounded-lg
+                text-gray-700 hover:bg-orange-50 hover:text-orange-600
+                transition text-sm border-l-4 border-transparent" [ngClass]="collapsed ? 'justify-center' : ''">
+
+        <i class="fa-solid fa-dollar-sign h-5 w-5 shrink-0"></i>
+
+        <span *ngIf="!collapsed">Configuración de Precios</span>
+      </a>
+
+
+      <!-- USUARIOS -->
+      <a *ngIf="rol === 'superadmin'" routerLink="/usuarios"
+        routerLinkActive="bg-orange-50 text-orange-600 border-l-4 border-orange-500" class="flex items-center gap-3 px-3 py-2 rounded-lg
+                text-gray-700 hover:bg-orange-50 hover:text-orange-600
+                transition text-sm border-l-4 border-transparent" [ngClass]="collapsed ? 'justify-center' : ''">
+
+        <i class="fa-solid fa-users h-5 w-5 shrink-0"></i>
+
+        <span *ngIf="!collapsed">Gestión de Usuarios</span>
+      </a>
+
+    </nav>
+
+    <!-- LOGOUT -->
+    <div class="p-4 border-t border-gray-200">
+
+      <button (click)="logout()" class="flex items-center gap-3 w-full px-3 py-2 rounded-lg
+                     text-gray-700 hover:bg-orange-50 hover:text-orange-600
+                     transition text-sm" [ngClass]="collapsed ? 'justify-center' : ''">
+
+        <i class="fa-solid fa-right-from-bracket h-5 w-5 shrink-0"></i>
+
+        <span *ngIf="!collapsed">Cerrar sesión</span>
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- CONTENT -->
+  <div class="flex-1 flex flex-col">
+
+    <!-- TOPBAR -->
+    <header class="h-14 bg-white border-b border-gray-200
+                   flex items-center px-6 shadow-sm">
+
+      <button (click)="mobileOpen = true" class="lg:hidden p-2 rounded-md hover:bg-orange-50 transition">
+
+        <i class="fa-solid fa-bars h-5 w-5 text-gray-700"></i>
+      </button>
+
+      <h1 class="ml-3 text-sm font-semibold text-gray-800 tracking-wide">
+        Sistema Administrativo
+      </h1>
+
+    </header>
+
+    <main class="flex-1 p-6 overflow-y-auto bg-gray-50">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
+</div>
