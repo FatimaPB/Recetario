@@ -73,18 +73,22 @@ export class UsuariosComponent implements OnInit {
       password: this.password,
       rol: this.rol
     }).subscribe({
-      next: () => {
-        this.mostrarToast('Usuario creado correctamente', 'success');
+      next: (res: any) => {
+        this.mostrarToast(res.mensaje || 'Usuario creado correctamente', 'success');
+
         this.nombre = '';
         this.email = '';
         this.password = '';
         this.mostrarDrawer = false;
+
         this.cargarUsuarios();
       },
-      error: () => this.mostrarToast('Error al crear usuario', 'error')    
+      error: (err) => {
+        const mensaje = err?.error?.mensaje || 'Error del servidor';
+        this.mostrarToast(mensaje, 'error');
+      }
     });
   }
-
   cambiarEstado(usuario: Usuario) {
 
     const nuevoEstado = usuario.estado === 'activo' ? 'inactivo' : 'activo';
