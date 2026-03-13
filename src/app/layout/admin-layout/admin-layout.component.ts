@@ -1,7 +1,6 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { Router, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -12,24 +11,36 @@ import { AuthService } from '../../services/auth.service';
 })
 export class AdminLayoutComponent implements OnInit {
 
-
-  constructor(private router: Router, private authService: AuthService) { }
-
-
   rol: string = '';
-
-  ngOnInit() {
-    this.rol = this.authService.getRol();
-  }
-
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    this.router.navigate(['/login']);
-  }
 
   collapsed = false;
   mobileOpen = false;
+
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit() {
+
+    this.authService.getUsuario().subscribe({
+      next: (res: any) => {
+        this.rol = res.rol;
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+      }
+    });
+
+  }
+
+  logout() {
+
+    this.authService.logout().subscribe(() => {
+      this.router.navigate(['/login']);
+    });
+
+  }
 
   get isMobile() {
     return window.innerWidth < 1024;
@@ -40,4 +51,3 @@ export class AdminLayoutComponent implements OnInit {
   }
 
 }
-
