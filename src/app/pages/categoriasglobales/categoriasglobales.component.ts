@@ -80,31 +80,44 @@ export class CategoriasglobalesComponent {
     this.mostrarDrawer = false;
   }
 
-  guardar() {
+guardar() {
 
-    if (this.editando && this.categoria.id_categoria_global) {
+  if (this.editando && this.categoria.id_categoria_global) {
 
-      this.categoriaService
-        .actualizar(this.categoria.id_categoria_global, this.categoria)
-        .subscribe(() => {
+    this.categoriaService
+      .actualizar(this.categoria.id_categoria_global, this.categoria)
+      .subscribe({
+        next: () => {
           this.mostrarToast('Categoría global actualizada correctamente', 'info');
           this.cargarCategorias();
           this.cerrarDrawer();
-        });
+        },
+        error: (err) => {
+          const mensaje = err.error?.mensaje || 'Error al actualizar categoría';
+          this.mostrarToast(mensaje, 'error');
+        }
+      });
 
-    } else {
+  } else {
 
-      this.categoriaService
-        .crear(this.categoria)
-        .subscribe(() => {
+    this.categoriaService
+      .crear(this.categoria)
+      .subscribe({
+        next: () => {
           this.mostrarToast('Categoría global creada correctamente', 'success');
           this.cargarCategorias();
           this.cerrarDrawer();
-        });
-
-    }
+        },
+        error: (err) => {
+          const mensaje = err.error?.mensaje || 'Error al crear categoría';
+          this.mostrarToast(mensaje, 'error');
+        }
+      });
 
   }
+
+}
+
 
   editar(categoria: CategoriaGlobal) {
     this.categoria = { ...categoria };
