@@ -65,7 +65,7 @@ describe('LoginComponent', () => {
 
     component.iniciarSesion();
 
-    expect(authServiceSpy.guardarSesion).toHaveBeenCalledWith(mockResponse);
+
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/dashboard']);
   });
 

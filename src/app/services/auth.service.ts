@@ -13,30 +13,35 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(data: LoginRequest): Observable<any> {
-    return this.http.post(this.apiUrl, data);
+    return this.http.post(this.apiUrl, data, { withCredentials: true });
   }
 
-  guardarSesion(respuesta: any) {
-    localStorage.setItem('token', respuesta.token);
-    localStorage.setItem('usuario', JSON.stringify(respuesta.usuario));
+  verificarRol() {
+    return this.http.get(
+      'http://localhost:3000/api/auth/verificar-rol',
+      { withCredentials: true }
+    );
+  }
+
+  verificarSesion() {
+    return this.http.get(
+      'http://localhost:3000/api/auth/verificar',
+      { withCredentials: true }
+    );
+  }
+
+  getUsuario() {
+    return this.http.get(
+      'http://localhost:3000/api/auth/me',
+      { withCredentials: true }
+    );
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-  }
-
-  estaAutenticado(): boolean {
-    return !!localStorage.getItem('token');
-  }
-
-
-  getUsuario() {
-    return JSON.parse(localStorage.getItem('usuario') || '{}');
-  }
-
-  getRol(): string {
-    const usuario = this.getUsuario();
-    return usuario?.rol || '';
+    return this.http.post(
+      'http://localhost:3000/api/auth/logout',
+      {},
+      { withCredentials: true }
+    );
   }
 }

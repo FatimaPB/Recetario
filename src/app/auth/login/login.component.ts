@@ -11,29 +11,36 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
- email = '';
+
+  email = '';
   password = '';
   error = '';
 
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   iniciarSesion() {
+
     this.error = '';
 
     this.authService.login({
       email: this.email,
       password: this.password
     }).subscribe({
-      next: (res) => {
-        this.authService.guardarSesion(res);
+
+      next: () => {
+        // La cookie se guarda automáticamente en el navegador
         this.router.navigate(['/dashboard']);
       },
+
       error: () => {
         this.error = 'Correo o contraseña incorrectos';
       }
+
     });
+
   }
+
 }
