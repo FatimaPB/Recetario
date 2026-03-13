@@ -12,14 +12,11 @@
 
 
 <!-- CARDS -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
   <!-- PLATILLOS -->
-  <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100
-              hover:shadow-lg transition duration-300">
-
+  <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition duration-300">
     <div class="flex justify-between items-center">
-
       <div>
         <p class="text-sm text-gray-500">Platillos</p>
         <h2 class="text-3xl font-bold text-blue-700 mt-2">
@@ -29,22 +26,16 @@
           registrados en el sistema
         </p>
       </div>
-
-      <!-- ICONO MISMO ESTILO QUE SIDEBAR -->
       <div class="bg-blue-100 p-3 rounded-xl">
         <i class="fa-solid fa-utensils text-blue-700 text-xl"></i>
       </div>
-
     </div>
   </div>
 
 
   <!-- INGREDIENTES -->
-  <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100
-              hover:shadow-lg transition duration-300">
-
+  <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition duration-300">
     <div class="flex justify-between items-center">
-
       <div>
         <p class="text-sm text-gray-500">Ingredientes</p>
         <h2 class="text-3xl font-bold text-orange-600 mt-2">
@@ -54,12 +45,118 @@
           disponibles en inventario
         </p>
       </div>
-
       <div class="bg-orange-100 p-3 rounded-xl">
         <i class="fa-solid fa-carrot text-orange-600 text-xl"></i>
       </div>
-
     </div>
+  </div>
+
+
+  <!-- CATEGORÍAS -->
+  <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition duration-300">
+    <div class="flex justify-between items-center">
+      <div>
+        <p class="text-sm text-gray-500">Categorías</p>
+        <h2 class="text-3xl font-bold text-green-600 mt-2">
+          {{ totalCategorias }}
+        </h2>
+        <p class="text-xs text-gray-400 mt-1">
+          categorías registradas
+        </p>
+      </div>
+      <div class="bg-green-100 p-3 rounded-xl">
+        <i class="fa-solid fa-layer-group text-green-600 text-xl"></i>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SUBCATEGORÍAS -->
+  <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition duration-300">
+    <div class="flex justify-between items-center">
+      <div>
+        <p class="text-sm text-gray-500">Subcategorías</p>
+        <h2 class="text-3xl font-bold text-purple-600 mt-2">
+          {{ totalSubcategorias }}
+        </h2>
+        <p class="text-xs text-gray-400 mt-1">
+          subcategorías disponibles
+        </p>
+      </div>
+      <div class="bg-purple-100 p-3 rounded-xl">
+        <i class="fa-solid fa-tags text-purple-600 text-xl"></i>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- USUARIOS -->
+  <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition duration-300">
+    <div class="flex justify-between items-center">
+      <div>
+        <p class="text-sm text-gray-500">Usuarios</p>
+        <h2 class="text-3xl font-bold text-indigo-600 mt-2">
+          {{ totalUsuarios }}
+        </h2>
+        <p class="text-xs text-gray-400 mt-1">
+          usuarios registrados
+        </p>
+      </div>
+      <div class="bg-indigo-100 p-3 rounded-xl">
+        <i class="fa-solid fa-users text-indigo-600 text-xl"></i>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<!-- ÚLTIMOS PLATILLOS -->
+<div class="mt-10 bg-white rounded-xl shadow-md border border-gray-100 p-6">
+
+  <h2 class="text-lg font-semibold text-gray-800 mb-4">
+    Últimos platillos registrados
+  </h2>
+
+  <div class="overflow-x-auto">
+
+    <table class="w-full text-sm text-left text-gray-600">
+
+      <thead class="text-xs text-gray-500 uppercase border-b">
+        <tr>
+          <th class="py-3">Platillo</th>
+          <th class="py-3">Imagen</th>
+          <th class="py-3">Costo</th>
+          <th class="py-3">Precio venta</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let platillo of ultimosPlatillos" class="border-b hover:bg-gray-50">
+
+          <td class="py-3 font-medium text-gray-700">
+            {{ platillo.nombre }}
+          </td>
+
+          <td class="py-3">
+            <img [src]="'http://localhost:3000' + platillo.imagen" class="w-12 h-12 rounded object-cover">
+          </td>
+
+          <td class="py-3">
+            $ {{ platillo.costo_total }}
+          </td>
+
+          <td class="py-3">
+            $ {{ platillo.precio_venta }}
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
   </div>
 
 </div>

@@ -17,4 +17,21 @@ export class DashboardService {
     });
   }
 
+  getUltimosPlatillos(): Observable<any> {
+    return this.http.get<any>(this.apiUrl + '/ultimos-platillos', {
+      withCredentials: true
+    });
+  }
+
+getEstadoPlatillos(): Observable<any> {
+  return this.http.get<any>(this.apiUrl + '/estado-platillos', {
+    withCredentials: true
+  });
+}
+
+getDistribucionCostos(): Observable<any> {
+  return this.http.get<any>(this.apiUrl + '/distribucion-costos', {
+    withCredentials: true
+  } );
+}
 }
