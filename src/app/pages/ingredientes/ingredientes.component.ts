@@ -85,23 +85,41 @@ export class IngredientesComponent implements OnInit {
   }
 
   guardar() {
+
     if (this.editando && this.ingrediente.id_ingrediente) {
+
       this.ingredienteService
         .actualizar(this.ingrediente.id_ingrediente, this.ingrediente)
-        .subscribe(() => {
-          this.mostrarToast('Ingrediente actualizado correctamente', 'info');
-          this.cargarIngredientes();
-          this.cerrarDrawer();
+        .subscribe({
+          next: () => {
+            this.mostrarToast('Ingrediente actualizado correctamente', 'info');
+            this.cargarIngredientes();
+            this.cerrarDrawer();
+          },
+          error: (err) => {
+            const mensaje = err.error?.mensaje || 'Error al actualizar ingrediente';
+            this.mostrarToast(mensaje, 'error');
+          }
         });
+
     } else {
+
       this.ingredienteService
         .crear(this.ingrediente)
-        .subscribe(() => {
-          this.mostrarToast('Ingrediente creado correctamente', 'success');
-          this.cargarIngredientes();
-          this.cerrarDrawer();
+        .subscribe({
+          next: () => {
+            this.mostrarToast('Ingrediente creado correctamente', 'success');
+            this.cargarIngredientes();
+            this.cerrarDrawer();
+          },
+          error: (err) => {
+            const mensaje = err.error?.mensaje || 'Error al crear ingrediente';
+            this.mostrarToast(mensaje, 'error');
+          }
         });
+
     }
+
   }
 
   editar(ingrediente: Ingrediente) {
