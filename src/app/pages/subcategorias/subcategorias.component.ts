@@ -96,31 +96,43 @@ export class SubcategoriasComponent {
     this.mostrarDrawer = false;
   }
 
-  guardar() {
+guardar() {
 
-    if (this.editando && this.subcategoria.id_subcategoria) {
+  if (this.editando && this.subcategoria.id_subcategoria) {
 
-      this.subcategoriaService
-        .actualizar(this.subcategoria.id_subcategoria, this.subcategoria)
-        .subscribe(() => {
+    this.subcategoriaService
+      .actualizar(this.subcategoria.id_subcategoria, this.subcategoria)
+      .subscribe({
+        next: () => {
           this.mostrarToast('Subcategoría actualizada correctamente', 'info');
           this.cargarSubcategorias();
           this.cerrarDrawer();
-        });
+        },
+        error: (err) => {
+          const mensaje = err.error?.mensaje || 'Error al actualizar subcategoría';
+          this.mostrarToast(mensaje, 'error');
+        }
+      });
 
-    } else {
+  } else {
 
-      this.subcategoriaService
-        .crear(this.subcategoria)
-        .subscribe(() => {
+    this.subcategoriaService
+      .crear(this.subcategoria)
+      .subscribe({
+        next: () => {
           this.mostrarToast('Subcategoría creada correctamente', 'success');
           this.cargarSubcategorias();
           this.cerrarDrawer();
-        });
-
-    }
+        },
+        error: (err) => {
+          const mensaje = err.error?.mensaje || 'Error al crear subcategoría';
+          this.mostrarToast(mensaje, 'error');
+        }
+      });
 
   }
+
+}
 
   editar(subcategoria: Subcategoria) {
     this.subcategoria = { ...subcategoria };
