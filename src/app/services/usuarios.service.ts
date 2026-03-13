@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Usuario } from '../models/usuario.model';
 import { Observable } from 'rxjs';
 
@@ -12,16 +12,9 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-  }
-
   listar(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(this.apiUrl, {
-      headers: this.getHeaders()
+      withCredentials: true
     });
   }
 
@@ -32,7 +25,7 @@ export class UsuarioService {
     rol: string;
   }): Observable<any> {
     return this.http.post(this.apiUrl, data, {
-      headers: this.getHeaders()
+      withCredentials: true
     });
   }
 
@@ -40,7 +33,7 @@ export class UsuarioService {
     return this.http.put(
       `${this.apiUrl}/${id}/estado`,
       { estado },
-      { headers: this.getHeaders() }
+      { withCredentials: true }
     );
   }
 }
